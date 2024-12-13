@@ -32,6 +32,7 @@
 #include "BuzzerLib.h"
 #include "UART_ESP32C3.h"
 #include "Nokia5110_Keyboard.h"
+#include "mi_bitmap.h"
 
 #define f_clock 16000000 // 16MHz
 #define DC_inicial 50    // 50% Duty Cycle inicial
@@ -240,28 +241,21 @@ void RemoveLine() {
             while(holdforlevel){
                 if(score >= 500 && score < 1000){
                     clearBuffer();
-                    Nokia5110_DisplayBuffer();
-                    text(0, 15,  (unsigned char *)"LEVEL 1 COMPLETED", 0);
-                    Nokia5110_DisplayBuffer();
+                    Nokia5110_DrawFullImage(Nivel1);
                     for(n = 0; n < 3600000; n++); //retardo
                     holdforlevel = 0;
 
                 }
                 else if(score >= 1000 && score < 1500){
                     clearBuffer();
-                    Nokia5110_DisplayBuffer();
-                    text(0, 15,  (unsigned char *)"LEVEL 2 COMPLETED", 0);
-                    Nokia5110_DisplayBuffer();
+                    Nokia5110_DrawFullImage(Nivel2);
                     for(n = 0; n < 3600000; n++); //retardo
                     holdforlevel = 0;
 
                 }
                 else if(score >= 1500){
                     clearBuffer();
-                    Nokia5110_DisplayBuffer();
-                    text(0, 15,  (unsigned char *)"LEVEL 3 COMPLETED", 0);
-                    text(0, 22,  (unsigned char *)"INFINITE MODE", 0);
-                    Nokia5110_DisplayBuffer();
+                    Nokia5110_DrawFullImage(Nivel3);
                     for(n = 0; n < 3600000; n++); //retardo
                     holdforlevel = 0;
 
@@ -372,9 +366,8 @@ void uploadScore(void){
         Nokia5110_DisplayBuffer();
         int hold = 1;
         while(hold){
-            text(0, 15,  (unsigned char *)"PRESS R", 0);
-            text(0, 22,  (unsigned char *)"TO START", 0);
-            Nokia5110_DisplayBuffer();
+            // Actualiza la pantalla inicial
+            Nokia5110_DrawFullImage(PantallaDeInicio);
             if((GPIO_PORTC_DATA_R & SW4) == 0){
                 while(((GPIO_PORTC_DATA_R & SW4) == 0));
                 game = 1;
@@ -415,9 +408,7 @@ void uploadScore(void){
                                 DrawBoard();
                                 hold = 1;
                                 while(hold){
-                                    text(0, 15,  (unsigned char *)"SAVE SCORE?", 0);
-                                    text(0, 22,  (unsigned char *)"<= YES    => NO", 0);
-                                    Nokia5110_DisplayBuffer();
+                                    Nokia5110_DrawFullImage(Puntaje);
                                     if((GPIO_PORTC_DATA_R & SW1) == 0){
                                         while((GPIO_PORTC_DATA_R & SW1) == 0);
                                         clearBuffer();
